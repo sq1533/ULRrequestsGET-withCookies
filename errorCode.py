@@ -1,4 +1,5 @@
 import json
+import csv
 import re
 import requests
 import pandas as pd
@@ -10,6 +11,7 @@ def missingError(service:str):
     #알람 데이터 정제
     alarmData = pd.read_csv(f"C:\\Users\\USER\\Downloads\\NAVER WORKS\\{service}.csv",sep="\n\n",header=None,engine='python')
     urlList = alarmData[alarmData[0].str.contains("●실시간 상황 URL링크: ",case=False)].index.tolist()
+    newline = []
     #오류코드 확인
     for i in urlList:
         url = alarmData.loc[i][0].replace("●실시간 상황 URL링크: ","")
@@ -25,13 +27,13 @@ def missingError(service:str):
             matches = pattern.findall(str(soup))
             for match in matches:
                 if match[0] in match[1]:
-                    print(url)
-                    print(match[0])
+                    newline.append(url)
+                    newline.append(match[0])
                 else:
                     pass
         else:
             pass
-    print("-"*50)
+    pd.Series(newline).to_csv(f"C:\\Users\\USER\\ve_1\\alarmErrorCode\\{service}.csv",index=False,sep="\n")
 missingError("간편결제")
 missingError("VAN")
 missingError("PG")
