@@ -4,7 +4,7 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 #세션 정보 호출
-with open("C:\\Users\\USER\\ve_1\\DB\\9session.json", "r", encoding="utf-8") as f:
+with open("C:\\Users\\USER\\ve_1\\DB\\session.json", "r", encoding="utf-8") as f:
     session = json.load(f)
 def missingError(service:str):
     #알람 데이터 정제
