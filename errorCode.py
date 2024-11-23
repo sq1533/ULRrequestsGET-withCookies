@@ -2,7 +2,6 @@ import json
 import re
 import requests
 import pandas as pd
-from bs4 import BeautifulSoup
 #세션 정보 호출
 with open("C:\\Users\\USER\\ve_1\\DB\\session.json", "r", encoding="utf-8") as f:
     session = json.load(f)
@@ -13,26 +12,26 @@ def missingError(service:str):
     newline = []
     #오류코드 확인
     for i in urlList:
-        url = alarmData.loc[i][0].replace("●실시간 상황 URL링크: ","")
+        url = alarmData.loc[i][0].replace("●실시간 상황 URL링크:","").replace(" ","")
         cookies = {
             'YourSession':session['YourSession'],
             'JSESSIONID':session['JSESSIONID']
         }
         html = requests.get(url, cookies=cookies).text
         if '오류코드:' in html:
-            soup = BeautifulSoup(html.split('오류코드:')[1],'html.parser')
-            #숫자 및 텍스트 혼합 패턴 정의
-            pattern = re.compile(r"<b>([\w\s]+)</b>(\(([^\)]+)\)|([\w\s]+))?")
-            matches = pattern.findall(str(soup))
-            for match in matches:
-                if match[0] in match[1]:
+            text = html.split('오류코드:')[1].split('</div>')[0]
+            cleanText = re.sub(r"<[^>]+>", "",text) #HTML 태그 제거
+            #오류코드 및 괄호 안 오류코드 추출
+            pattern = r"(\w+)\(([^)]+)\)"
+            matches = re.findall(pattern, cleanText)
+            results = [list(item) for item in matches]
+            for j in range(len(results)):
+                if results[j][0]==results[j][1]:
                     newline.append(url)
-                    newline.append(match[0])
-                else:
-                    pass
-        else:
-            pass
-    pd.Series(newline).to_csv(f"C:\\Users\\USER\\ve_1\\alarmErrorCode\\{service}.csv",index=False,sep="\n")
+                    newline.append(results[j][0])
+                else:pass
+            pd.Series(newline).to_csv(f"C:\\Users\\USER\\ve_1\\alarmErrorCode\\{service}.csv",index=False,sep="\n")
+        else:pass
 missingError("간편결제")
 missingError("VAN")
 missingError("PG")
