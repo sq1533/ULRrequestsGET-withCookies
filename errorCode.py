@@ -20,10 +20,10 @@ def missingError(service:str):
         html = requests.get(url, cookies=cookies).text
         if '오류코드:' in html:
             text = html.split('오류코드:')[1].split('</div>')[0]
-            cleanText = re.sub(r"<[^>]+>", "",text) #HTML 태그 제거
+            cleanText = re.sub(r"<[^>]+>","",text) #HTML 태그 제거
             #오류코드 및 괄호 안 오류코드 추출
             pattern = r"(\w+)\(([^)]+)\)"
-            matches = re.findall(pattern, cleanText)
+            matches = re.findall(pattern,cleanText)
             results = [list(item) for item in matches]
             for j in range(len(results)):
                 if results[j][0]==results[j][1]:
