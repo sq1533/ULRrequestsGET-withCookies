@@ -1,9 +1,11 @@
 import json
+import os
 import re
 import requests
 import pandas as pd
 #세션 정보 호출
-with open("C:\\Users\\USER\\ve_1\\DB\\session.json", "r", encoding="utf-8") as f:
+sessionPath = os.path.join(os.path.dirname(__file__),"session.json")
+with open(sessionPath, "r", encoding="utf-8") as f:
     session = json.load(f)
 def missingError(service:str):
     #알람 데이터 정제
