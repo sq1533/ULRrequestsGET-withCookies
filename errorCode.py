@@ -1,8 +1,8 @@
-import json
 import os
+import json
+import pandas as pd
 import re
 import requests
-import pandas as pd
 #세션 정보 호출
 sessionPath = os.path.join(os.path.dirname(__file__),"session.json")
 with open(sessionPath, "r", encoding="utf-8") as f:
